@@ -700,15 +700,10 @@ void MainWindow::open()
   const auto kCriticalDialogDelay = 100;
   QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
 
-  if (!Settings::value(Settings::Gui::AutoUpdateCheck).isValid()) {
-    Settings::setValue(Settings::Gui::AutoUpdateCheck, messages::showUpdateCheckOption(this));
-  }
-
-  if (Settings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
-    m_versionChecker.checkLatest();
-  } else {
-    qDebug() << "skipping check for new version, disabled";
-  }
+  // Deskflow-cn does not use the upstream Deskflow update service.
+  // Keep update checks disabled until this fork has its own update endpoint.
+  Settings::setValue(Settings::Gui::AutoUpdateCheck, false);
+  qDebug() << "update check disabled for Deskflow-cn";
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
     if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())

@@ -223,7 +223,7 @@ QVariant Settings::defaultValue(const QString &key)
     return !Settings::isPortableMode();
 
   if (key == Gui::UpdateCheckUrl)
-    return kUrlUpdateCheck;
+    return QString{};
 
   if (key == Core::Language)
     return QStringLiteral("zh_CN");

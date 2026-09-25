@@ -227,7 +227,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
   Settings::setValue(Settings::Daemon::Elevate, ui->cbElevateDaemon->isChecked());
   Settings::setValue(Settings::Gui::Autohide, ui->rbAutoHide->isChecked());
-  Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
+  Settings::setValue(Settings::Gui::AutoUpdateCheck, false);
   Settings::setValue(Settings::Core::PreventSleep, ui->cbPreventSleep->isChecked());
   Settings::setValue(Settings::Security::Certificate, ui->lineTlsCertPath->text());
   Settings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText().toInt());
@@ -263,7 +263,8 @@ void SettingsDialog::loadFromConfig()
   ui->lineLogFilename->setText(Settings::value(Settings::Log::File).toString());
   ui->cbPreventSleep->setChecked(Settings::value(Settings::Core::PreventSleep).toBool());
   ui->cbElevateDaemon->setChecked(Settings::value(Settings::Daemon::Elevate).toBool());
-  ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
+  ui->cbAutoUpdate->setChecked(false);
+  ui->cbAutoUpdate->setVisible(false);
   ui->cbGuiDebug->setChecked(Settings::value(Settings::Log::GuiDebug).toBool());
   ui->cbShowVersion->setChecked(Settings::value(Settings::Gui::ShowVersionInTitle).toBool());
   ui->cbRunEnterCommand->setChecked(Settings::value(Settings::Core::EnableEnterCommand).toBool());

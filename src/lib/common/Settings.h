@@ -358,6 +358,7 @@ private:
     , Core::PreventSleep
     , Core::EnableEnterCommand
     , Core::EnableExitCommand
+    , Gui::AutoUpdateCheck
     , Client::InvertYScroll
     , Client::InvertXScroll
     , Client::XdpClipboardRetried
