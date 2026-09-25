@@ -27,6 +27,14 @@
 
   <CPackWiXFragment Id="CM_CP_deskflow.exe">
     <firewall:FirewallException Id="DiscoveryFirewallException" Name="键鼠共享大师 - 设备发现" Program="[INSTALL_ROOT]deskflow.exe" Scope="any"/>
+    <Shortcut
+      Id="DesktopShortcut"
+      Directory="DesktopFolder"
+      Name="键鼠共享大师"
+      Description="键鼠共享大师"
+      WorkingDirectory="INSTALL_ROOT"
+      Icon="ProductIcon.ico"
+      Advertise="yes" />
   </CPackWiXFragment>
 
   <CPackWiXFragment Id="#PRODUCT">
