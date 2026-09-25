@@ -72,12 +72,14 @@ int main(int argc, char *argv[])
   auto helpOption = QCommandLineOption({"h", "help"}, "Display Help on the command line");
   auto versionOption = QCommandLineOption({"v", "version"}, "Display version information");
   auto resetOption = QCommandLineOption("reset", "Reset all settings");
+  auto trayOption = QCommandLineOption("tray", "Start hidden in the system tray");
 
   QCommandLineParser parser;
   parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
   parser.addOption(helpOption);
   parser.addOption(versionOption);
   parser.addOption(resetOption);
+  parser.addOption(trayOption);
   parser.parse(QCoreApplication::arguments());
 
   if (!parser.errorText().isEmpty()) {
@@ -152,7 +154,7 @@ int main(int argc, char *argv[])
   }
 
   MainWindow mainWindow;
-  mainWindow.open();
+  mainWindow.open(parser.isSet(trayOption));
 
   return QApplication::exec();
 }

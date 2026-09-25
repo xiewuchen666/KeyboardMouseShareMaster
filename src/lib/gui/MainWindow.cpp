@@ -680,9 +680,11 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 // End slots
 //////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::open()
+void MainWindow::open(bool forceHidden)
 {
-  if (!Settings::value(Settings::Gui::Autohide).toBool())
+  if (forceHidden)
+    hide();
+  else if (!Settings::value(Settings::Gui::Autohide).toBool())
     showAndActivate();
   else if (deskflow::platform::isMac())
     // macOS to call hide after this function ends
@@ -745,6 +747,7 @@ void MainWindow::setupTrayIcon()
   trayMenu->insertSeparator(m_actionMinimize);
   trayMenu->insertSeparator(m_actionTrayQuit);
   m_trayIcon->setContextMenu(trayMenu);
+  m_trayIcon->setToolTip(kAppName);
 
   setTrayIcon();
   m_trayIcon->show();

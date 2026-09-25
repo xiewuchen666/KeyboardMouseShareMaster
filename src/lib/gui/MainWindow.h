@@ -67,7 +67,7 @@ public:
   {
     return m_coreProcess.mode();
   }
-  void open();
+  void open(bool forceHidden = false);
   ServerConfig &serverConfig()
   {
     return m_serverConfig;

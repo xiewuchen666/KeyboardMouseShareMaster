@@ -359,6 +359,7 @@ private:
     , Core::EnableEnterCommand
     , Core::EnableExitCommand
     , Gui::AutoUpdateCheck
+    , Gui::SymbolicTrayIcon
     , Client::InvertYScroll
     , Client::InvertXScroll
     , Client::XdpClipboardRetried
@@ -383,7 +384,6 @@ private:
     , Gui::CloseToTray
     , Gui::CloseReminder
     , Gui::LogExpanded
-    , Gui::SymbolicTrayIcon
     , Security::TlsEnabled
     , Security::CheckPeers
     , Server::AutoPairClients

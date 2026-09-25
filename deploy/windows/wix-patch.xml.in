@@ -27,6 +27,12 @@
 
   <CPackWiXFragment Id="CM_CP_deskflow.exe">
     <firewall:FirewallException Id="DiscoveryFirewallException" Name="键鼠共享大师 - 设备发现" Program="[INSTALL_ROOT]deskflow.exe" Scope="any"/>
+    <RegistryValue
+      Root="HKLM"
+      Key="Software\Microsoft\Windows\CurrentVersion\Run"
+      Name="KeyboardMouseShareMaster"
+      Type="string"
+      Value="&quot;[INSTALL_ROOT]deskflow.exe&quot; --tray" />
     <Shortcut
       Id="DesktopShortcut"
       Directory="DesktopFolder"
