@@ -41,7 +41,7 @@
 
 	<!-- Local Lan Entitlements -->
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>This app uses local network permissions for communication between a Deskflow server and clients.</string>
+	<string>Deskflow-cn 需要访问本地网络，以便在同一局域网内自动发现并连接其他电脑。</string>
 	<key>com.apple.security.networking.local</key>
 	<true/>
 

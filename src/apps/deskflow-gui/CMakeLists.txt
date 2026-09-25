@@ -2,11 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2024 Symless Ltd
 # SPDX-License-Identifier: MIT
 
-if(APPLE)
-  set(target Deskflow)
-else()
-  set(target deskflow)
-endif()
+set(target deskflow)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -17,9 +13,9 @@ if(WIN32)
   set(platform_extra deskflow.rc)
 elseif(BUILD_OSX_BUNDLE)
   #setup our bundle plist file
-  set(BUNDLE_EXECUTABLE_NAME "${target}")
-  set(BUNDLE_BUNDLE_NAME "${target}")
-  set(BUNDLE_DISPLAY_NAME "${target}")
+  set(BUNDLE_EXECUTABLE_NAME "${CMAKE_PROJECT_PROPER_NAME}")
+  set(BUNDLE_BUNDLE_NAME "${CMAKE_PROJECT_PROPER_NAME}")
+  set(BUNDLE_DISPLAY_NAME "${CMAKE_PROJECT_PROPER_NAME}")
   set(BUNDLE_GUI_IDENTIFIER "${CMAKE_PROJECT_REV_FQDN}")
   set(BUNDLE_ICON_FILE ${target}.icns)
   set(BUNDLE_INFO_STRING "${CMAKE_PROJECT_DESCRIPTION}")
@@ -93,6 +89,7 @@ if(WIN32)
 elseif(APPLE)
   if (BUILD_OSX_BUNDLE)
     set_target_properties(${target} PROPERTIES
+      OUTPUT_NAME "${CMAKE_PROJECT_PROPER_NAME}"
       INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
       MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/deskflow.plist"
       XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
