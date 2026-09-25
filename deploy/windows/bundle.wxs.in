@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+  <Bundle
+      Name="Deskflow-cn"
+      Manufacturer="Deskflow-cn Devs"
+      Version="@BUNDLE_VERSION@"
+      UpgradeCode="36632878-9D3D-4854-831E-D77DABD8B259"
+      Compressed="yes">
+
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication
+          Theme="hyperlinkLicense"
+          LicenseUrl=""
+          ShowVersion="yes"
+          SuppressOptionsUI="yes" />
+    </BootstrapperApplication>
+
+    <util:RegistrySearch
+        Id="SearchVCRedistInstalled"
+        Variable="VCRedistInstalled"
+        Root="HKLM"
+        Key="SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"
+        Value="Installed"
+        Result="value"
+        Bitness="always64" />
+
+    <util:RegistrySearch
+        Id="SearchVCRedistMinor"
+        Variable="VCRedistMinor"
+        Root="HKLM"
+        Key="SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"
+        Value="Minor"
+        Result="value"
+        Bitness="always64" />
+
+    <Chain>
+      <ExePackage
+          Id="VCRedistX64"
+          SourceFile="@VCREDIST_PATH@"
+          PerMachine="yes"
+          Permanent="yes"
+          Vital="yes"
+          DetectCondition="VCRedistInstalled = 1 AND VCRedistMinor &gt;= 44"
+          InstallArguments="/install /quiet /norestart"
+          RepairArguments="/repair /quiet /norestart">
+        <!-- 1638 = a newer VC++ runtime is already installed. Treat that as satisfied. -->
+        <ExitCode Value="1638" Behavior="success" />
+      </ExePackage>
+
+      <MsiPackage
+          Id="DeskflowCnMsi"
+          SourceFile="@MSI_PATH@"
+          Vital="yes" />
+    </Chain>
+  </Bundle>
+</Wix>
