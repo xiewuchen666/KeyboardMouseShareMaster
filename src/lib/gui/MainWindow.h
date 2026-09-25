@@ -18,6 +18,7 @@
 #include "VersionChecker.h"
 #include "config/ServerConfig.h"
 #include "gui/core/CoreProcess.h"
+#include "gui/core/DeviceDiscovery.h"
 #include "gui/core/NetworkMonitor.h"
 #include "net/Fingerprint.h"
 
@@ -106,6 +107,8 @@ private:
   void showMyFingerprint();
   void updateSecurityIcon(bool visible);
   void updateNetworkInfo();
+  void updateDeviceDiscovery();
+  void handleDiscoveredServer(const QString &address, const QString &computerName, quint16 port);
 
   void coreModeToggled(bool checked);
   void updateModeControls();
@@ -205,6 +208,7 @@ private:
 
   // Network monitoring
   NetworkMonitor *m_networkMonitor = nullptr;
+  deskflow::gui::DeviceDiscovery *m_deviceDiscovery = nullptr;
   QString m_currentIpAddress;
 
   // Server IP strategy optimization

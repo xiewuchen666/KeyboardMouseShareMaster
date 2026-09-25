@@ -42,6 +42,8 @@ add_library(${target} STATIC
   config/ServerConfig.h
   core/CoreProcess.cpp
   core/CoreProcess.h
+  core/DeviceDiscovery.cpp
+  core/DeviceDiscovery.h
   core/NetworkMonitor.cpp
   core/NetworkMonitor.h
   dialogs/AboutDialog.cpp
@@ -122,5 +124,6 @@ target_link_libraries(${target}
     common
     platform
     net
+    Qt6::Network
     Qt6::Widgets
 )

@@ -36,6 +36,7 @@ public:
 
   struct Client
   {
+    inline static const auto AutoDiscovery = QStringLiteral("client/autoDiscovery");
     inline static const auto DynamicConnectionRetry = QStringLiteral("client/dynamicConnectionInterval");
     inline static const auto InvertYScroll = QStringLiteral("client/invertYScroll");
     inline static const auto InvertXScroll = QStringLiteral("client/invertXScroll");
@@ -43,6 +44,7 @@ public:
     inline static const auto XScrollScale = QStringLiteral("client/xScrollScale");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
+    inline static const auto PairedServerName = QStringLiteral("client/pairedServerName");
     inline static const auto XdpClipboardRetried = QStringLiteral("client/xdpClipboardRetried");
     inline static const auto XdpRestoreToken = QStringLiteral("client/xdpRestoreToken");
   };
@@ -105,6 +107,7 @@ public:
   };
   struct Server
   {
+    inline static const auto AutoPairClients = QStringLiteral("server/autoPairClients");
     inline static const auto ClipboardSize = QStringLiteral("server/clipboardSize");
     inline static const auto DefaultLockToComputerState = QStringLiteral("server/defaultLockToComputerState");
     inline static const auto DisableLockToComputer = QStringLiteral("server/disableLockToComputer");
@@ -276,11 +279,13 @@ private:
   };
 
   inline static const QStringList m_validKeys = {
-      Client::DynamicConnectionRetry
+      Client::AutoDiscovery
+    , Client::DynamicConnectionRetry
     , Client::InvertYScroll
     , Client::InvertXScroll
     , Client::LanguageSync
     , Client::RemoteHost
+    , Client::PairedServerName
     , Client::YScrollScale
     , Client::XScrollScale
     , Core::CoreMode
@@ -322,6 +327,7 @@ private:
     , Security::CheckPeers
     , Security::KeySize
     , Security::TlsEnabled
+    , Server::AutoPairClients
     , Server::ClipboardSize
     , Server::DefaultLockToComputerState
     , Server::DisableLockToComputer
@@ -352,7 +358,6 @@ private:
     , Core::PreventSleep
     , Core::EnableEnterCommand
     , Core::EnableExitCommand
-    , Client::DynamicConnectionRetry
     , Client::InvertYScroll
     , Client::InvertXScroll
     , Client::XdpClipboardRetried
@@ -371,6 +376,8 @@ private:
   // When checking the default values this list contains the ones that default to true.
   inline static const QStringList m_defaultTrueValues = {
       Core::UseHooks
+    , Client::AutoDiscovery
+    , Client::DynamicConnectionRetry
     , Client::LanguageSync
     , Gui::CloseToTray
     , Gui::CloseReminder
@@ -378,6 +385,7 @@ private:
     , Gui::SymbolicTrayIcon
     , Security::TlsEnabled
     , Security::CheckPeers
+    , Server::AutoPairClients
     , Server::EnableClipboard
     , Server::Win32KeepForeground
   };

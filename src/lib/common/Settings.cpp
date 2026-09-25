@@ -225,6 +225,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Gui::UpdateCheckUrl)
     return kUrlUpdateCheck;
 
+  if (key == Core::Language)
+    return QStringLiteral("zh_CN");
+
   if (key == Server::ExternalConfigFile)
     return QStringLiteral("%1/%2-server.conf").arg(Settings::settingsPath(), kAppId);
 

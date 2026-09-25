@@ -79,7 +79,8 @@ MainWindow::MainWindow()
       m_actionRestartCore{new QAction(this)},
       m_actionStopCore{new QAction(this)},
       m_actionShowHelp{new QAction(this)},
-      m_networkMonitor{new NetworkMonitor(this)}
+      m_networkMonitor{new NetworkMonitor(this)},
+      m_deviceDiscovery{new DeviceDiscovery(this)}
 {
   ui->setupUi(this);
 
@@ -311,6 +312,7 @@ void MainWindow::connectSlots()
   connect(ui->lineEditName, &QLineEdit::editingFinished, this, &MainWindow::setHostName);
 
   connect(m_networkMonitor, &NetworkMonitor::ipAddressesChanged, this, &MainWindow::updateIpLabel);
+  connect(m_deviceDiscovery, &DeviceDiscovery::serverDiscovered, this, &MainWindow::handleDiscoveredServer);
 }
 
 void MainWindow::toggleLogVisible(bool visible)
@@ -545,8 +547,66 @@ void MainWindow::updateModeControls()
     m_networkMonitor->stopMonitoring();
   }
 
+  updateDeviceDiscovery();
+
   if (isServer || isClient)
     updateModeControlLabels();
+}
+
+void MainWindow::updateDeviceDiscovery()
+{
+  if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Server::AutoPairClients).toBool()) {
+    m_deviceDiscovery->setServerInfo(
+        Settings::value(Settings::Core::ComputerName).toString(),
+        static_cast<quint16>(Settings::value(Settings::Core::Port).toUInt())
+    );
+    m_deviceDiscovery->setMode(DeviceDiscovery::Mode::Server);
+    return;
+  }
+
+  if (m_coreProcess.mode() == CoreMode::Client && Settings::value(Settings::Client::AutoDiscovery).toBool()) {
+    m_deviceDiscovery->setMode(DeviceDiscovery::Mode::Client);
+    return;
+  }
+
+  m_deviceDiscovery->setMode(DeviceDiscovery::Mode::Disabled);
+}
+
+void MainWindow::handleDiscoveredServer(const QString &address, const QString &computerName, quint16 port)
+{
+  if (m_coreProcess.mode() != CoreMode::Client || !Settings::value(Settings::Client::AutoDiscovery).toBool())
+    return;
+
+  const auto pairedServer = Settings::value(Settings::Client::PairedServerName).toString();
+  const auto currentHost = Settings::value(Settings::Client::RemoteHost).toString().trimmed();
+
+  // Preserve an existing manual address. Auto-discovery takes over only when
+  // the address is empty or when this client has already paired with a server.
+  if (pairedServer.isEmpty() && !currentHost.isEmpty())
+    return;
+
+  if (!pairedServer.isEmpty() && pairedServer != computerName)
+    return;
+
+  if (pairedServer.isEmpty()) {
+    qInfo().noquote() << "auto pairing with discovered server:" << computerName << address;
+    Settings::setValue(Settings::Client::PairedServerName, computerName);
+  }
+
+  if (Settings::value(Settings::Core::Port).toUInt() != port)
+    Settings::setValue(Settings::Core::Port, port);
+
+  if (currentHost == address)
+    return;
+
+  qInfo().noquote() << "updating paired server address:" << computerName << address;
+  ui->lineHostname->setText(address);
+  Settings::save();
+
+  if (m_coreProcess.isStarted())
+    m_coreProcess.restart();
+  else if (canRunCore())
+    startCore();
 }
 
 void MainWindow::updateModeControlLabels()
@@ -780,6 +840,16 @@ void MainWindow::handleUnrecognisedClient(const QString &clientName)
 
   if (m_serverConfig.isFull() || m_serverConfig.screenExists(clientName))
     return;
+
+  if (Settings::value(Settings::Server::AutoPairClients).toBool()) {
+    qInfo().noquote() << "auto pairing discovered client:" << clientName;
+    m_serverConfig.addClient(clientName);
+    m_serverConfig.commit();
+    Settings::save();
+    if (m_coreProcess.isStarted())
+      m_coreProcess.restart();
+    return;
+  }
 
   m_newClientPromptShowing = true;
 
