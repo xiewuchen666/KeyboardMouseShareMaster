@@ -29,7 +29,8 @@ void QSettingsProxy::load(const QString &fileName)
     m_pSettings.get()->deleteLater();
 
   if (fileName.isEmpty())
-    m_pSettings = std::make_unique<QSettings>(QSettings::NativeFormat, QSettings::UserScope, kAppName, kAppName);
+    m_pSettings =
+        std::make_unique<QSettings>(QSettings::NativeFormat, QSettings::UserScope, kAppInternalName, kAppInternalName);
   else
     m_pSettings = std::make_unique<QSettings>(fileName, QSettings::IniFormat);
 }

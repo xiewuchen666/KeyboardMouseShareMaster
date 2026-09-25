@@ -39,7 +39,7 @@ int main(int argc, char **argv)
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
-  QCoreApplication::setApplicationName(QStringLiteral("%1 Daemon").arg(kAppName));
+  QCoreApplication::setApplicationName(QStringLiteral("%1 Daemon").arg(kAppInternalName));
   QCoreApplication app(argc, argv);
 
   Arch arch;

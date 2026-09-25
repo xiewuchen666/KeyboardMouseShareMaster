@@ -57,14 +57,14 @@ void DeviceDiscovery::startClient()
     return;
   }
 
-  qInfo() << "device discovery listening for Deskflow-cn servers on UDP port" << kDiscoveryPort;
+  qInfo() << "device discovery listening for 键鼠共享大师 servers on UDP port" << kDiscoveryPort;
 }
 
 void DeviceDiscovery::startServer()
 {
   broadcastServer();
   m_broadcastTimer->start();
-  qInfo() << "device discovery advertising Deskflow-cn server on UDP port" << kDiscoveryPort;
+  qInfo() << "device discovery advertising 键鼠共享大师 server on UDP port" << kDiscoveryPort;
 }
 
 void DeviceDiscovery::stop()

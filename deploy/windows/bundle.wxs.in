@@ -3,10 +3,11 @@
      xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal"
      xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
   <Bundle
-      Name="Deskflow-cn"
-      Manufacturer="Deskflow-cn Devs"
+      Name="键鼠共享大师"
+      Manufacturer="键鼠共享大师"
       Version="@BUNDLE_VERSION@"
       UpgradeCode="36632878-9D3D-4854-831E-D77DABD8B259"
+      IconSourceFile="@ICON_PATH@"
       Compressed="yes">
 
     <BootstrapperApplication>
@@ -50,7 +51,7 @@
       </ExePackage>
 
       <MsiPackage
-          Id="DeskflowCnMsi"
+          Id="KeyboardMouseShareMasterMsi"
           SourceFile="@MSI_PATH@"
           Vital="yes" />
     </Chain>

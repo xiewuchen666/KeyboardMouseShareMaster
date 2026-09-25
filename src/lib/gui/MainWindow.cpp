@@ -700,10 +700,10 @@ void MainWindow::open()
   const auto kCriticalDialogDelay = 100;
   QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
 
-  // Deskflow-cn does not use the upstream Deskflow update service.
+  // 键鼠共享大师 does not use the upstream Deskflow update service.
   // Keep update checks disabled until this fork has its own update endpoint.
   Settings::setValue(Settings::Gui::AutoUpdateCheck, false);
-  qDebug() << "update check disabled for Deskflow-cn";
+  qDebug() << "update check disabled for 键鼠共享大师";
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
     if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())

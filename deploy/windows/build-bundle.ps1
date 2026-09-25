@@ -13,18 +13,18 @@ $vcRedistPath = Join-Path $bundleWork "vc_redist.x64.exe"
 $vcRedistUrl = "https://aka.ms/vs/17/release/vc_redist.x64.exe"
 
 if (-not $MsiPath) {
-  $candidate = Get-ChildItem $buildPackage -Filter "deskflow-cn-*-win-x64.msi" -File |
+  $candidate = Get-ChildItem $buildPackage -Filter "keyboard-mouse-share-master-*-win-x64.msi" -File |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 1
   if (-not $candidate) {
-    throw "No Deskflow-cn MSI found in $buildPackage. Build the MSI first."
+    throw "No 键鼠共享大师 MSI found in $buildPackage. Build the MSI first."
   }
   $MsiPath = $candidate.FullName
 }
 
 $MsiPath = (Resolve-Path $MsiPath).Path
 $msiName = [IO.Path]::GetFileName($MsiPath)
-if ($msiName -notmatch '^deskflow-cn-(\d+\.\d+\.\d+\.\d+)-win-x64\.msi$') {
+if ($msiName -notmatch '^keyboard-mouse-share-master-(\d+\.\d+\.\d+\.\d+)-win-x64\.msi$') {
   throw "Unexpected MSI filename: $msiName"
 }
 $version = $Matches[1]
@@ -55,10 +55,14 @@ $bundleSource = Get-Content $templatePath -Raw -Encoding UTF8
 $bundleSource = $bundleSource.Replace("@BUNDLE_VERSION@", $version)
 $bundleSource = $bundleSource.Replace("@VCREDIST_PATH@", [Security.SecurityElement]::Escape($vcRedistPath))
 $bundleSource = $bundleSource.Replace("@MSI_PATH@", [Security.SecurityElement]::Escape($MsiPath))
+$bundleSource = $bundleSource.Replace(
+  "@ICON_PATH@",
+  [Security.SecurityElement]::Escape((Join-Path $repoRoot "src\apps\res\deskflow.ico"))
+)
 $generatedWxs = Join-Path $bundleWork "bundle.wxs"
 Set-Content -Path $generatedWxs -Value $bundleSource -Encoding UTF8 -NoNewline
 
-$outFile = Join-Path $OutputDir ("Deskflow-cn-Setup-{0}-x64.exe" -f $version)
+$outFile = Join-Path $OutputDir ("KeyboardMouseShareMaster-Setup-{0}-x64.exe" -f $version)
 if (Test-Path $outFile) { Remove-Item $outFile -Force }
 
 $wixArgs = @(

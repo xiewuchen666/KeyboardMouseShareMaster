@@ -33,8 +33,8 @@ else()
   message(STATUS "UNKNOWN System: ${CMAKE_SYSTEM_NAME}")
 endif()
 
-# Use the branded application name for distributable package filenames.
-string(TOLOWER "${CMAKE_PROJECT_PROPER_NAME}" PACKAGE_FILE_PREFIX)
+# Keep package filenames ASCII-only while the installed product uses the Chinese display name.
+set(PACKAGE_FILE_PREFIX "keyboard-mouse-share-master")
 set(CPACK_PACKAGE_FILE_NAME "${PACKAGE_FILE_PREFIX}-${PACKAGE_VERSION_LABEL}-${OS_STRING}")
 message(STATUS "Package Basename: ${CPACK_PACKAGE_FILE_NAME}")
 

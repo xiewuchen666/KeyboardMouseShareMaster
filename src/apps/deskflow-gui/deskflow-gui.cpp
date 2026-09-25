@@ -56,8 +56,9 @@ int main(int argc, char *argv[])
     deskflow::platform::setAppId();
 #endif
 
-  QCoreApplication::setApplicationName(kAppName);
-  QCoreApplication::setOrganizationName(kAppName);
+  QCoreApplication::setApplicationName(kAppInternalName);
+  QCoreApplication::setOrganizationName(kAppInternalName);
+  QApplication::setApplicationDisplayName(kAppName);
   QCoreApplication::setApplicationVersion(kVersion);
   QCoreApplication::setOrganizationDomain(kOrgDomain); // used in prefix, can't be a url
   QGuiApplication::setDesktopFileName(kRevFqdnName);

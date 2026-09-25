@@ -41,7 +41,7 @@
 
 	<!-- Local Lan Entitlements -->
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Deskflow-cn 需要访问本地网络，以便在同一局域网内自动发现并连接其他电脑。</string>
+	<string>键鼠共享大师需要访问本地网络，以便在同一局域网内自动发现并连接其他电脑。</string>
 	<key>com.apple.security.networking.local</key>
 	<true/>
 

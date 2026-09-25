@@ -73,7 +73,7 @@ int main(int argc, char **argv)
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
-  QApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
+  QApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppInternalName));
   QApplication app(argc, argv);
 
   Arch arch;
