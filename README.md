@@ -20,10 +20,15 @@
 4. 两台电脑处于同一局域网时，客户端会自动发现并连接服务器。
 5. 在服务器中配置两台屏幕的相对位置，例如第二台电脑在右侧，就把它拖到服务器右边。
 6. 鼠标移动到屏幕边缘并继续推动，即可跨到另一台电脑，键盘会随当前屏幕一起切换。
-<img width="430" height="540" alt="1" src="https://github.com/user-attachments/assets/33cac923-a2cd-4b41-9fdf-a8005cfd9f78" />
-<img width="633" height="678" alt="2" src="https://github.com/user-attachments/assets/4c610a06-c833-481d-89d6-f3a5be8599e3" />
-<img width="430" height="540" alt="3" src="https://github.com/user-attachments/assets/f0df8192-71e3-4e92-a866-80d3b4c483aa" />
-<img width="726" height="641" alt="4" src="https://github.com/user-attachments/assets/bb117219-7e01-4adf-93b4-53ed5608d3d6" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/33cac923-a2cd-4b41-9fdf-a8005cfd9f78" width="48%" alt="服务器设置" />
+  <img src="https://github.com/user-attachments/assets/4c610a06-c833-481d-89d6-f3a5be8599e3" width="48%" alt="屏幕布局" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f0df8192-71e3-4e92-a866-80d3b4c483aa" width="48%" alt="客户端设置" />
+  <img src="https://github.com/user-attachments/assets/bb117219-7e01-4adf-93b4-53ed5608d3d6" width="48%" alt="连接状态" />
+</p>
 
 首次建立 TLS 信任时仍会保留安全确认，不会自动绕过证书指纹验证。
 
