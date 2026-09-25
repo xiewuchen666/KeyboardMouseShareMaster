@@ -20,16 +20,7 @@
 4. 两台电脑处于同一局域网时，客户端会自动发现并连接服务器。
 5. 在服务器中配置两台屏幕的相对位置，例如第二台电脑在右侧，就把它拖到服务器右边。
 6. 鼠标移动到屏幕边缘并继续推动，即可跨到另一台电脑，键盘会随当前屏幕一起切换。
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/33cac923-a2cd-4b41-9fdf-a8005cfd9f78" width="48%" alt="服务器设置" />
-  <img src="https://github.com/user-attachments/assets/4c610a06-c833-481d-89d6-f3a5be8599e3" width="48%" alt="屏幕布局" />
-</p>
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/f0df8192-71e3-4e92-a866-80d3b4c483aa" width="48%" alt="客户端设置" />
-  <img src="https://github.com/user-attachments/assets/bb117219-7e01-4adf-93b4-53ed5608d3d6" width="48%" alt="连接状态" />
-</p>
-
+<img width="1297" height="1212" alt="5ad380bb-3cc1-4961-acb6-9e25166dc1e7" src="https://github.com/user-attachments/assets/dd6b8777-4cc3-4a01-97f1-9b2efe3c5981" />
 首次建立 TLS 信任时仍会保留安全确认，不会自动绕过证书指纹验证。
 
 ## 主要功能
