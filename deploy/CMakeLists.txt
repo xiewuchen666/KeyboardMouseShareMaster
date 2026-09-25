@@ -33,8 +33,9 @@ else()
   message(STATUS "UNKNOWN System: ${CMAKE_SYSTEM_NAME}")
 endif()
 
-# Always use "deskflow" for start of name
-set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${PACKAGE_VERSION_LABEL}-${OS_STRING}")
+# Use the branded application name for distributable package filenames.
+string(TOLOWER "${CMAKE_PROJECT_PROPER_NAME}" PACKAGE_FILE_PREFIX)
+set(CPACK_PACKAGE_FILE_NAME "${PACKAGE_FILE_PREFIX}-${PACKAGE_VERSION_LABEL}-${OS_STRING}")
 message(STATUS "Package Basename: ${CPACK_PACKAGE_FILE_NAME}")
 
 include(CPack)
