@@ -6,9 +6,9 @@
 
 ## 下载
 
-当前 Windows x64 稳定版：**v1.26.0.479**
+当前 Windows x64 稳定版：**v1.26.0.487**
 
-- [下载键鼠共享大师 v1.26.0.479](https://github.com/xiewuchen666/KeyboardMouseShareMaster/releases/tag/v1.26.0.479)
+- [下载键鼠共享大师 v1.26.0.487](https://github.com/xiewuchen666/KeyboardMouseShareMaster/releases/tag/v1.26.0.487)
 
 普通用户直接下载并运行上面的 EXE 即可。安装器会自动检测并补齐所需的 Microsoft Visual C++ x64 Runtime。
 
@@ -42,7 +42,7 @@
 
 ## 当前状态
 
-Windows x64 **v1.26.0.479** 已完成实机双机验证。
+Windows x64 **v1.26.0.487** 已完成实机双机验证。
 
 已验证场景：
 
