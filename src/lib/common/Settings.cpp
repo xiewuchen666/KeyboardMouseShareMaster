@@ -228,8 +228,19 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Core::Language)
     return QStringLiteral("zh_CN");
 
-  if (key == Server::ExternalConfigFile)
+  if (key == Server::ExternalConfigFile) {
+#ifdef Q_OS_WIN
+    // The GUI runs as the signed-in user while the daemon/core can run elevated.
+    // Keeping the generated server layout under ProgramData can leave it owned by
+    // Administrators/SYSTEM, which makes later GUI starts unable to rewrite it.
+    // Derive the generated layout from the active settings file instead so both
+    // the GUI and the elevated core resolve the same per-user, writable path.
+    if (!Settings::isPortableMode())
+      return QStringLiteral("%1/%2-server.conf")
+          .arg(QFileInfo(Settings::settingsFile()).absolutePath(), kAppId);
+#endif
     return QStringLiteral("%1/%2-server.conf").arg(Settings::settingsPath(), kAppId);
+  }
 
   if (key == Core::Port)
     return 24800;

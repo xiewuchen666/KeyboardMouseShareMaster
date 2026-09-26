@@ -326,7 +326,20 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
   std::scoped_lock lock{m_processStateMutex};
 
   LOG_DEBUG("setting watchdog process config");
-  m_command = std::wstring(command.begin(), command.end());
+  const std::wstring newCommand(command.begin(), command.end());
+
+  // The daemon can restore and start the core before the GUI starts at login.
+  // When the GUI later sends the same start request, do not tear down and
+  // recreate an already healthy core. Explicit restart still works because
+  // the GUI sends a stop request first, which moves the watchdog out of
+  // Running and clears the persisted command before the next start request.
+  if (!newCommand.empty() && m_processState == ProcessState::Running && m_command == newCommand &&
+      m_elevateProcess == elevate) {
+    LOG_DEBUG("watchdog process config unchanged and process already running, leaving it running");
+    return;
+  }
+
+  m_command = newCommand;
   m_elevateProcess = elevate;
 
   if (m_command.empty()) {
