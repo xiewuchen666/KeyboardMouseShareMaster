@@ -21,6 +21,7 @@ create_test(
   SOURCE I18NTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/common"
 )
+add_dependencies(I18NTests app_translations)
 
 create_test(
   NAME KeySequenceTests

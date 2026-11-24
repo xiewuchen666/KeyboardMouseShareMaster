@@ -92,6 +92,10 @@ private:
   void coreConnectionStateChanged(ConnectionState state);
   void coreProcessStateChanged(ProcessState state);
 
+#ifdef Q_OS_MACOS
+  void showMacInputPermissionPrompt(bool coreNeedsPermission);
+#endif
+
   void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
   void serverConnectionConfigureClient(const QString &clientName);
 

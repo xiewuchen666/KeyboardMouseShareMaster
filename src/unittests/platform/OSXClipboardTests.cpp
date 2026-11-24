@@ -13,7 +13,7 @@
 
 void OSXClipboardTests::open()
 {
-  OSXClipboard clipboard;
+  OSXClipboard clipboard(kPasteboardUniqueName);
   QVERIFY(clipboard.open(0));
   QVERIFY(clipboard.empty());
   clipboard.close();
@@ -23,7 +23,7 @@ void OSXClipboardTests::singleFormat()
 {
   using enum IClipboard::Format;
 
-  OSXClipboard clipboard;
+  OSXClipboard clipboard(kPasteboardUniqueName);
   QVERIFY(clipboard.empty());
   clipboard.add(Text, m_testString);
   QVERIFY(clipboard.has(Text));

@@ -19,11 +19,13 @@ if(CLEAN_TRS)
   list(APPEND TR_OPTIONS -no-obsolete)
 endif()
 
-# English will have only plurals
-qt_create_translation(TRS ${CMAKE_SOURCE_DIR}/src ${CMAKE_PROJECT_NAME}_en.ts OPTIONS -pluralonly ${TR_OPTIONS})
-
-# Other languages contain the full set of strings.
-qt_create_translation(TRS ${CMAKE_SOURCE_DIR}/src ${${CMAKE_PROJECT_NAME}_TRS} OPTIONS ${TR_OPTIONS})
+if(BUILD_OSX_BUNDLE)
+  qt_add_translation(TRS ${CMAKE_PROJECT_NAME}_en.ts ${${CMAKE_PROJECT_NAME}_TRS} OPTIONS -silent)
+else()
+  # English will have only plurals; other languages contain the full set of strings.
+  qt_create_translation(TRS ${CMAKE_SOURCE_DIR}/src ${CMAKE_PROJECT_NAME}_en.ts OPTIONS -pluralonly ${TR_OPTIONS})
+  qt_create_translation(TRS ${CMAKE_SOURCE_DIR}/src ${${CMAKE_PROJECT_NAME}_TRS} OPTIONS ${TR_OPTIONS})
+endif()
 
 #ensure that the targets are built always
 add_custom_target(app_translations ALL DEPENDS ${TRS})
@@ -33,7 +35,8 @@ if (NOT BUILD_OSX_BUNDLE)
   install(FILES ${TRS} DESTINATION ${CMAKE_INSTALL_I18N_DIR})
 else()
   #when making the bundle copy our translation into the bundle
-  set(BUNDLE_TR_DIR $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/Resources/translations)
+  set(BUNDLE_TR_DIR "$<TARGET_BUNDLE_CONTENT_DIR:deskflow>/Resources/translations")
+  set(INSTALL_TR_DIR "${CMAKE_PROJECT_DISPLAY_NAME}.app/Contents/Resources/translations")
 
   # find the qt translation files needed to copy into the bundle
   get_target_property(lupdate_executable Qt6::lupdate IMPORTED_LOCATION)
@@ -44,18 +47,21 @@ else()
 
   add_custom_command(
     TARGET app_translations POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${BUNDLE_TR_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/*.qm" ${BUNDLE_TR_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${MAC_QT_LANG_PATH}/qtbase_en.qm" "${BUNDLE_TR_DIR}/qt_en.qm"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${BUNDLE_TR_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${TRS} "${BUNDLE_TR_DIR}"
+    VERBATIM
   )
+  install(FILES ${TRS} DESTINATION "${INSTALL_TR_DIR}")
 
-  # install the other Qt lang files renamed to qt_lang.qm
-  foreach(LANG ${${CMAKE_PROJECT_NAME}_TRS})
+  # Use the filename expected by the app's translation loader.
+  foreach(LANG ${CMAKE_PROJECT_NAME}_en.ts ${${CMAKE_PROJECT_NAME}_TRS})
     string(REPLACE "${CMAKE_PROJECT_NAME}_" "" LANG ${LANG})
     string(REPLACE ".ts" "" LANG ${LANG})
     add_custom_command(
       TARGET app_translations POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${MAC_QT_LANG_PATH}/qtbase_${LANG}.qm" "${BUNDLE_TR_DIR}/qt_${LANG}.qm"
+      VERBATIM
     )
+    install(FILES "${MAC_QT_LANG_PATH}/qtbase_${LANG}.qm" DESTINATION "${INSTALL_TR_DIR}" RENAME "qt_${LANG}.qm")
   endforeach()
 endif()

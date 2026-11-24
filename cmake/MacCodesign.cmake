@@ -41,10 +41,10 @@ function(_finalize_mac_codesign)
             --options runtime
             --entitlements "${CMAKE_SOURCE_DIR}/src/apps/res/entitlements-dev.plist"
             --sign "${APPLE_CODESIGN_DEV}"
-            "$<TARGET_BUNDLE_DIR:${CMAKE_PROJECT_PROPER_NAME}>"
+            "$<TARGET_BUNDLE_DIR:deskflow>"
     COMMAND ${CMAKE_COMMAND} -E touch ${stamp_file}
     DEPENDS ${depends}
-    COMMENT "Codesigning ${CMAKE_PROJECT_PROPER_NAME}"
+    COMMENT "Codesigning ${CMAKE_PROJECT_DISPLAY_NAME}"
     VERBATIM
   )
 

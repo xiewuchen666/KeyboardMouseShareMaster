@@ -15,10 +15,15 @@ runs:
       shell: bash
       run: |
         if [ "$RUNNER_OS" == "macOS" ]; then
-          dmg=$(ls build/deskflow-*.dmg | head -1)
-          echo "Y" | hdiutil attach "$dmg" -nobrowse -mountpoint /tmp/deskflow-dmg
-          /tmp/deskflow-dmg/Deskflow.app/Contents/MacOS/deskflow-core --version
-          hdiutil detach /tmp/deskflow-dmg
+          dmg=(build/keyboard-mouse-share-master-*.dmg)
+          mountpoint=$(mktemp -d)
+          trap 'hdiutil detach "$mountpoint" >/dev/null 2>&1 || true; rmdir "$mountpoint"' EXIT
+          printf 'Y\n' | hdiutil attach "${dmg[0]}" -readonly -nobrowse -mountpoint "$mountpoint"
+          app="$mountpoint/键鼠共享大师.app"
+          codesign --verify --deep --strict "$app"
+          test -f "$app/Contents/Resources/translations/deskflow_zh_CN.qm"
+          "$app/Contents/MacOS/deskflow-core" --version
+          "$app/Contents/MacOS/键鼠共享大师" --version
 
         elif [ "$RUNNER_OS" == "Windows" ]; then
           7z x build/deskflow-*-portable.zip -otmp/deskflow-pkg

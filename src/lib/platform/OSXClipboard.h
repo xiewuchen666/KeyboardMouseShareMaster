@@ -19,7 +19,7 @@ class IOSXClipboardConverter;
 class OSXClipboard : public IClipboard
 {
 public:
-  OSXClipboard();
+  explicit OSXClipboard(CFStringRef pasteboardName = kPasteboardClipboard);
   virtual ~OSXClipboard();
 
   //! Test if clipboard is owned by deskflow

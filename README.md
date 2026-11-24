@@ -12,9 +12,13 @@
 
 普通用户直接下载并运行上面的 EXE 即可。安装器会自动检测并补齐所需的 Microsoft Visual C++ x64 Runtime。
 
+macOS 通用版 **v1.26.0.487**（macOS 14 及以上，Apple Silicon 和 Intel）
+
+- [下载键鼠共享大师 macOS DMG](https://github.com/xiewuchen666/KeyboardMouseShareMaster/releases/download/macos-v1.26.0.487/keyboard-mouse-share-master-1.26.0.487-macos-universal.dmg)
+
 ## 快速使用（这是教程，必读！）
 特别注意：设备需要处于同一个局域网！
-1. 两台 Windows 电脑都安装“键鼠共享大师”。
+1. 两台电脑分别安装对应系统的“键鼠共享大师”。
 2. 准备共享键盘鼠标的电脑选择“将此计算机设为服务器”。
 3. 另一台电脑选择“将此计算机设为客户端”。
 4. 两台电脑处于同一局域网时，客户端会自动发现并连接服务器。
@@ -55,7 +59,38 @@ Windows x64 **v1.26.0.487** 已完成实机双机验证。
 - 开机启动
 - 一键安装与覆盖升级
 
-macOS 已完成部分品牌和 Bundle 前置适配，但尚未完成 Apple Silicon 实机编译、权限验证和 DMG 发布。
+macOS 版可从源码构建为独立 DMG，支持在同一局域网内与现有 Windows 版搭配使用。两端均可选择服务器或客户端。Mac 使用原生菜单栏图标，关闭主窗口后可从菜单栏重新打开。
+
+## macOS 安装与配对
+
+1. 打开 DMG，将「键鼠共享大师」拖入「应用程序」，然后从那里打开。
+2. 接有键盘鼠标的电脑选「将此计算机设为服务器」并点击「启动」。另一台电脑选「将此计算机设为客户端」，可等待自动发现或填写服务器 IP 后点击「连接」。
+3. 在 Mac 上按提示允许本地网络访问，并在「系统设置 → 隐私与安全性 → 辅助功能」中启用「键鼠共享大师」。macOS 27 将此项称为「设备控制和数据访问」。如果应用提示 `deskflow-core` 也需要权限，点击「在访达中显示键鼠核心」，将该文件添加至同一个权限列表。
+4. 如果 Mac 作为服务器时无法把键盘输入发送到另一台电脑，可在「隐私与安全性 → 输入监控」中启用应用和 `deskflow-core`，然后重启应用。
+5. 首次连接时核对两端显示的 TLS 指纹并确认。在服务器中设置电脑的屏幕相对位置，移动鼠标到对应屏幕边缘即可切换。
+
+如果希望在 Mac 登录后启动，前往「系统设置 → 通用 → 登录项与扩展」添加应用。可以在应用设置中选择启动时隐藏主窗口。
+
+本地构建默认采用临时签名。带隔离标记的副本可能需要在「隐私与安全性」中选择「仍要打开」。公开分发时请使用 Developer ID 签名，并提交 Apple 公证。
+
+## macOS 构建
+
+准备 Xcode Command Line Tools、CMake 3.24+、Ninja、Qt 和 OpenSSL 3.x。Qt 需要包含 Qt Base、Qt Tools、Qt Declarative、Qt Translations、Qt SVG 和 `macdeployqt`。下面以 Qt 6.11.2 和 macOS 14 为构建目标。
+
+```bash
+cmake -S . -B build-macos -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_PREFIX_PATH="$QT_ROOT" \
+  -DOPENSSL_ROOT_DIR="$OPENSSL_ROOT" \
+  -DCMAKE_OSX_ARCHITECTURES="$(uname -m)" \
+  -DCMAKE_OSX_DEPLOYMENT_TARGET=14 \
+  -DSKIP_BUILD_TESTS=ON
+cmake --build build-macos --target package
+```
+
+`QT_ROOT` 指向 Qt 的 `macos` 目录。`OPENSSL_ROOT` 指向包含头文件和静态库的安装目录，静态库应针对上述最低系统版本编译。通用包将架构参数改为 `'arm64;x86_64'`，并提供包含这两种架构的 Qt 和 OpenSSL。DMG 生成在 `build-macos/`，包含运行所需的 Qt 框架和插件。
+
+构建发布包时可传入 `-DAPPLE_CODESIGN_IDENTITY="Developer ID Application: …"`。运行单元测试使用 `ctest --test-dir build-macos/src/unittests --output-on-failure`。键盘事件模拟需要有输入事件权限的桌面会话。
 
 ## Windows 构建
 

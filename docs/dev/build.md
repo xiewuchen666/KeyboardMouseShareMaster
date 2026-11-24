@@ -31,6 +31,7 @@ Deskflow supports the following CMake options:
 | VCPKG_QT                 | Build Qt w/ vcpkg (Windows only)        | OFF                | |
 | CLEAN_TRS                | Remove obsolete strings from tr files   | OFF                | |
 | APPLE_CODESIGN_DEV       | Apple codesign cert ID for development  | Not set            | | 
+| APPLE_CODESIGN_IDENTITY  | Developer ID Application identity for the distribution bundle | Ad hoc | |
 
 Example cmake configuration:
 `cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX=<INSTALLPREFIX>`
@@ -73,7 +74,7 @@ For development codesign:
 5. To get your ID, run: `security find-identity -v -p codesigning login.keychain-db`
 6. Pass the ID to CMake, e.g. `-DAPPLE_CODESIGN_DEV=Apple Development: bob@exmaple.com (KLGSJHLFXY)`
 7. Configure and build
-8. To verify, run: `codesign -d -r- build/bin/Deskflow.app`
+8. To verify, run `codesign -d -r- "build/bin/键鼠共享大师.app"`.
 
 ## Build
 

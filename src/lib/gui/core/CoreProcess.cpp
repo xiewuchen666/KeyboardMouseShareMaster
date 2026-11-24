@@ -185,6 +185,12 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
       checkExistingProcess();
       return;
     }
+#ifdef Q_OS_MACOS
+    if (exitCode == s_exitInputPermission) {
+      Q_EMIT error(Error::InputPermissionMissing);
+      return;
+    }
+#endif
     qWarning("desktop process exited with code: %d", exitCode);
     return;
   }

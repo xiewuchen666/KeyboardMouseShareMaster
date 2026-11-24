@@ -17,7 +17,7 @@ elseif(BUILD_OSX_BUNDLE)
   set(BUNDLE_BUNDLE_NAME "${CMAKE_PROJECT_DISPLAY_NAME}")
   set(BUNDLE_DISPLAY_NAME "${CMAKE_PROJECT_DISPLAY_NAME}")
   set(BUNDLE_GUI_IDENTIFIER "${CMAKE_PROJECT_REV_FQDN}")
-  set(BUNDLE_ICON_FILE ${target}.icns)
+  get_filename_component(BUNDLE_ICON_FILE "${MACOS_BUNDLE_ICON}" NAME)
   set(BUNDLE_INFO_STRING "${CMAKE_PROJECT_DESCRIPTION}")
   set(BUNDLE_COPYRIGHT "${CMAKE_PROJECT_COPYRIGHT}")
 
@@ -27,8 +27,15 @@ elseif(BUILD_OSX_BUNDLE)
     @ONLY
   )
 
-  set(platform_extra ../res/Deskflow.icns)
-  set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+  set(brand_icon "${CMAKE_CURRENT_SOURCE_DIR}/../res/keymouse-share-master.png")
+  add_custom_command(
+    OUTPUT "${MACOS_BUNDLE_ICON}"
+    COMMAND /usr/bin/sips -s format icns "${brand_icon}" --out "${MACOS_BUNDLE_ICON}"
+    DEPENDS "${brand_icon}"
+    VERBATIM
+  )
+  set(platform_extra "${MACOS_BUNDLE_ICON}")
+  set_source_files_properties("${platform_extra}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 
 add_executable(${target} WIN32 MACOSX_BUNDLE
@@ -88,6 +95,7 @@ if(WIN32)
 
 elseif(APPLE)
   if (BUILD_OSX_BUNDLE)
+    add_dependencies(${target} app_translations ${CMAKE_PROJECT_NAME}-core)
     set_target_properties(${target} PROPERTIES
       OUTPUT_NAME "${CMAKE_PROJECT_DISPLAY_NAME}"
       INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"

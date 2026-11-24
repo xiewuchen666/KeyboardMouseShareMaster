@@ -53,6 +53,7 @@
 
 #if defined(Q_OS_MACOS)
 #include <ApplicationServices/ApplicationServices.h>
+#include <QOperatingSystemVersion>
 #endif
 
 using namespace deskflow::gui;
@@ -385,6 +386,12 @@ void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::coreProcessError(CoreProcess::Error error)
 {
+#ifdef Q_OS_MACOS
+  if (error == CoreProcess::Error::InputPermissionMissing) {
+    showMacInputPermissionPrompt(true);
+    return;
+  }
+#endif
   if (error == CoreProcess::Error::AddressMissing) {
     QMessageBox::warning(
         this, tr("Address missing"), tr("Please enter the hostname or IP address of the other computer.")
@@ -405,8 +412,54 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
   }
 }
 
+#ifdef Q_OS_MACOS
+void MainWindow::showMacInputPermissionPrompt(bool coreNeedsPermission)
+{
+  showAndActivate();
+  const auto permissionName = QOperatingSystemVersion::current().majorVersion() >= 27
+                                  ? tr("Device Control and Data Access")
+                                  : tr("Accessibility");
+  const auto instruction =
+      coreNeedsPermission
+          ? tr("Add and enable %1 in System Settings → Privacy & Security → %2. "
+               "Then return here and try again.")
+                .arg(kCoreBinName, permissionName)
+          : tr("Enable %1 in System Settings → Privacy & Security → %2 to share the keyboard and mouse. "
+               "Then return here and try again.")
+                .arg(kAppName, permissionName);
+  QMessageBox prompt(QMessageBox::Information, kAppName, instruction, QMessageBox::Cancel, this);
+  auto *settingsButton = prompt.addButton(tr("Open System Settings"), QMessageBox::AcceptRole);
+  auto *revealButton =
+      coreNeedsPermission ? prompt.addButton(tr("Show Core in Finder"), QMessageBox::ActionRole) : nullptr;
+  prompt.exec();
+
+  if (prompt.clickedButton() == settingsButton) {
+    if (!coreNeedsPermission) {
+      const void *keys[] = {kAXTrustedCheckOptionPrompt};
+      const void *values[] = {kCFBooleanTrue};
+      const auto options = CFDictionaryCreate(nullptr, keys, values, 1, nullptr, nullptr);
+      AXIsProcessTrustedWithOptions(options);
+      CFRelease(options);
+    }
+    QDesktopServices::openUrl(
+        QUrl(QStringLiteral("x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"))
+    );
+  } else if (revealButton && prompt.clickedButton() == revealButton) {
+    const auto path = QDir(QCoreApplication::applicationDirPath()).filePath(kCoreBinName);
+    QProcess::startDetached(QStringLiteral("/usr/bin/open"), {QStringLiteral("-R"), path});
+  }
+}
+#endif
+
 void MainWindow::startCore()
 {
+#ifdef Q_OS_MACOS
+  if (!AXIsProcessTrusted()) {
+    showMacInputPermissionPrompt(false);
+    return;
+  }
+#endif
+
   // Save current IP state when server starts
   if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Core::Interface).toString().isEmpty()) {
     m_serverStartIPs = NetworkMonitor::validAddresses();

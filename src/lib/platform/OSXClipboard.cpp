@@ -19,7 +19,7 @@
 // OSXClipboard
 //
 
-OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
+OSXClipboard::OSXClipboard(CFStringRef pasteboardName) : m_time(0), m_pboard(nullptr)
 {
   m_converters.push_back(new OSXClipboardHTMLConverter);
   m_converters.push_back(new OSXClipboardBMPConverter);
@@ -27,7 +27,7 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
   m_converters.push_back(new OSXClipboardUTF16Converter);
   m_converters.push_back(new OSXClipboardTextConverter);
 
-  OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
+  OSStatus createErr = PasteboardCreate(pasteboardName, &m_pboard);
   if (createErr != noErr) {
     LOG_WARN("failed to create clipboard reference: error %i", createErr);
     LOG_ERR("unable to connect to pasteboard, clipboard sharing disabled", createErr);
@@ -44,6 +44,8 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
 OSXClipboard::~OSXClipboard()
 {
   clearConverters();
+  if (m_pboard != nullptr)
+    CFRelease(m_pboard);
 }
 
 bool OSXClipboard::empty()
@@ -212,9 +214,6 @@ std::string OSXClipboard::get(Format format) const
 
 void OSXClipboard::clearConverters()
 {
-  if (m_pboard == nullptr)
-    return;
-
   for (ConverterList::iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     delete *index;
   }

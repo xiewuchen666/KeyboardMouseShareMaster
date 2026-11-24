@@ -325,6 +325,30 @@ Do you want to connect to the server?
 <context>
     <name>MainWindow</name>
     <message>
+        <source>Device Control and Data Access</source>
+        <translation>设备控制和数据访问</translation>
+    </message>
+    <message>
+        <source>Accessibility</source>
+        <translation>辅助功能</translation>
+    </message>
+    <message>
+        <source>Add and enable %1 in System Settings → Privacy &amp; Security → %2. Then return here and try again.</source>
+        <translation>请在「系统设置 → 隐私与安全性 → %2」中添加并启用 %1，然后回到这里重试。</translation>
+    </message>
+    <message>
+        <source>Enable %1 in System Settings → Privacy &amp; Security → %2 to share the keyboard and mouse. Then return here and try again.</source>
+        <translation>要共享键盘和鼠标，请在「系统设置 → 隐私与安全性 → %2」中启用 %1，然后回到这里重试。</translation>
+    </message>
+    <message>
+        <source>Open System Settings</source>
+        <translation>打开系统设置</translation>
+    </message>
+    <message>
+        <source>Show Core in Finder</source>
+        <translation>在访达中显示键鼠核心</translation>
+    </message>
+    <message>
         <source>This computer&apos;s name:</source>
         <translation>此计算机名称：</translation>
     </message>
@@ -596,6 +620,10 @@ Additionally, check you are able to %1 the server config file: %2</source>
 </context>
 <context>
     <name>QObject</name>
+    <message>
+        <source>Drag %1 to the Applications folder and open it from there.</source>
+        <translation>请将 %1 拖到「应用程序」文件夹，再从那里打开。</translation>
+    </message>
     <message>
         <source>fatal error</source>
         <translation>致命错误</translation>

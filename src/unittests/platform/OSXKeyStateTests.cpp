@@ -57,6 +57,9 @@ void OSXKeyStateTests::mapModifiersFromOSX_OSXMask()
 
 void OSXKeyStateTests::fakePollShift()
 {
+  if (!CGPreflightPostEventAccess())
+    QSKIP("Permission to post system keyboard events is required");
+
   deskflow::KeyMap keyMap;
   EventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
@@ -77,6 +80,9 @@ void OSXKeyStateTests::fakePollShift()
 
 void OSXKeyStateTests::fakePollChar()
 {
+  if (!CGPreflightPostEventAccess())
+    QSKIP("Permission to post system keyboard events is required");
+
   deskflow::KeyMap keyMap;
   EventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
@@ -96,6 +102,9 @@ void OSXKeyStateTests::fakePollChar()
 
 void OSXKeyStateTests::fakePollCharWithModifier()
 {
+  if (!CGPreflightPostEventAccess())
+    QSKIP("Permission to post system keyboard events is required");
+
   deskflow::KeyMap keyMap;
   EventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);

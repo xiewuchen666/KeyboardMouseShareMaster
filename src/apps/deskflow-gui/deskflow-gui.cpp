@@ -23,11 +23,6 @@
 #include <QMessageBox>
 #include <QSharedMemory>
 
-#if defined(Q_OS_MACOS)
-#include <Carbon/Carbon.h>
-#include <cstdlib>
-#endif
-
 #if defined(Q_OS_UNIX) && defined(QT_DEBUG)
 #include <QLoggingCategory>
 #endif
@@ -37,10 +32,6 @@
 #endif
 
 using namespace deskflow::gui;
-
-#if defined(Q_OS_MACOS)
-bool checkMacAssistiveDevices();
-#endif
 
 const static auto kHeader = QStringLiteral("%1: %2\n").arg(kAppName, kDisplayVersion);
 
@@ -135,15 +126,9 @@ int main(int argc, char *argv[])
 #if defined(Q_OS_MACOS)
 
   if (app.applicationDirPath().startsWith("/Volumes/")) {
-    QString msgBody = QStringLiteral(
-        "Please drag %1 to the Applications folder, "
-        "and open it from there."
+    QMessageBox::information(
+        nullptr, kAppName, QObject::tr("Drag %1 to the Applications folder and open it from there.").arg(kAppName)
     );
-    QMessageBox::information(nullptr, kAppName, msgBody.arg(kAppName));
-    return 1;
-  }
-
-  if (!checkMacAssistiveDevices()) {
     return 1;
   }
 #endif
@@ -158,26 +143,3 @@ int main(int argc, char *argv[])
 
   return QApplication::exec();
 }
-
-#if defined(Q_OS_MACOS)
-bool checkMacAssistiveDevices()
-{
-  // new in mavericks, applications are trusted individually
-  // with use of the accessibility api. this call will show a
-  // prompt which can show the security/privacy/accessibility
-  // tab, with a list of allowed applications. deskflow should
-  // show up there automatically, but will be unchecked.
-
-  if (AXIsProcessTrusted()) {
-    return true;
-  }
-
-  const void *keys[] = {kAXTrustedCheckOptionPrompt};
-  const void *trueValue[] = {kCFBooleanTrue};
-  CFDictionaryRef options = CFDictionaryCreate(nullptr, keys, trueValue, 1, nullptr, nullptr);
-
-  bool result = AXIsProcessTrustedWithOptions(options);
-  CFRelease(options);
-  return result;
-}
-#endif

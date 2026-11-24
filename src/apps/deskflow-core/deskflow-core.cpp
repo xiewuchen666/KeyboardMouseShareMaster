@@ -19,6 +19,8 @@
 
 #if defined(Q_OS_WIN)
 #include "arch/win32/ArchMiscWindows.h"
+#elif defined(Q_OS_MACOS)
+#include <ApplicationServices/ApplicationServices.h>
 #endif
 
 #include <QApplication>
@@ -115,6 +117,13 @@ int main(int argc, char **argv)
   }
 
   parser.parse();
+
+#ifdef Q_OS_MACOS
+  if (!AXIsProcessTrusted()) {
+    LOG_ERR("macOS did not grant keyboard and mouse access to this core executable");
+    return s_exitInputPermission;
+  }
+#endif
 
   EventQueue events;
   const auto processName = QFileInfo(argv[0]).fileName();

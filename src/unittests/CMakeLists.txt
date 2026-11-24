@@ -73,16 +73,10 @@ endif()
 #Store all test that should be run post build in the property
 get_property(PROJECT_TESTS GLOBAL PROPERTY ${CMAKE_PROJECT_NAME}_tests)
 
-if(APPLE)
-  set(guiApp Deskflow)
-else()
-  set(guiApp deskflow)
-endif()
-
 option(SKIP_BUILD_TESTS "Skip build time test" OFF)
 
 if(NOT SKIP_BUILD_TESTS)
-  add_custom_target(run_tests ALL DEPENDS ${PROJECT_TESTS} ${guiApp})
+  add_custom_target(run_tests ALL DEPENDS ${PROJECT_TESTS} deskflow)
   add_custom_command (
     TARGET run_tests
     POST_BUILD
